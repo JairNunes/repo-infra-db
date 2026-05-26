@@ -1,0 +1,9 @@
+aws_region          = "us-east-1"
+environment         = "prod"
+db_identifier       = "oficina-mecanica-db"
+db_name             = "oficina"
+db_username         = "oficina_admin"
+# db_password         = "SET_VIA_TF_VAR_DB_PASSWORD_OR_GITHUB_SECRET"
+instance_class      = "db.t3.micro"
+publicly_accessible = true
+allowed_cidrs       = ["0.0.0.0/0"]
