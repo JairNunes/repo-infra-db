@@ -25,22 +25,22 @@ env:
 
 jobs:
   validate:
-    name: terraform validate
+    name: validate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
-      - name: terraform fmt
+      - name: fmt
         run: terraform fmt -check -recursive
-      - name: terraform init (no backend)
+      - name: init
         run: terraform init -backend=false
-      - name: terraform validate
+      - name: validate
         run: terraform validate
 
   plan:
-    name: terraform plan
+    name: plan
     needs: validate
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' || github.event_name == 'push'
@@ -65,7 +65,7 @@ jobs:
           retention-days: 5
 
   apply:
-    name: terraform apply
+    name: apply
     needs: plan
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'

@@ -22,8 +22,6 @@ provider "aws" {
   }
 }
 
-# VPC dedicada pro RDS (isolada da VPC do EKS, conectada via VPC peering quando necessario)
-# Aqui usamos a default VPC pra simplificar o setup acadêmico.
 data "aws_vpc" "default" {
   default = true
 }
@@ -36,18 +34,15 @@ data "aws_subnets" "default" {
 }
 
 resource "aws_db_subnet_group" "main" {
-  name        = "${var.db_identifier}-subnet-group"
-  description = "Subnet group para RDS PostgreSQL da oficina mecanica"
-  subnet_ids  = data.aws_subnets.default.ids
+  name       = "${var.db_identifier}-subnet-group"
+  subnet_ids = data.aws_subnets.default.ids
 }
 
 resource "aws_security_group" "rds" {
-  name        = "${var.db_identifier}-sg"
-  description = "Permite acesso a porta 5432 a partir da VPC + IPs autorizados"
-  vpc_id      = data.aws_vpc.default.id
+  name   = "${var.db_identifier}-sg"
+  vpc_id = data.aws_vpc.default.id
 
   ingress {
-    description = "PostgreSQL from VPC"
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
@@ -55,7 +50,6 @@ resource "aws_security_group" "rds" {
   }
 
   ingress {
-    description = "PostgreSQL from authorized IPs (Lambda + EKS workers)"
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
@@ -86,38 +80,36 @@ resource "aws_db_parameter_group" "main" {
 }
 
 resource "aws_db_instance" "main" {
-  identifier             = var.db_identifier
-  engine                 = "postgres"
-  engine_version         = "16.3"
-  instance_class         = var.instance_class
-  allocated_storage      = 20
-  max_allocated_storage  = 50
-  storage_type           = "gp3"
-  storage_encrypted      = true
-  db_name                = var.db_name
-  username               = var.db_username
-  password               = var.db_password
-  port                   = 5432
-  db_subnet_group_name   = aws_db_subnet_group.main.name
-  vpc_security_group_ids = [aws_security_group.rds.id]
-  parameter_group_name   = aws_db_parameter_group.main.name
-  publicly_accessible    = var.publicly_accessible
-  multi_az               = false
+  identifier              = var.db_identifier
+  engine                  = "postgres"
+  engine_version          = "16.3"
+  instance_class          = var.instance_class
+  allocated_storage       = 20
+  max_allocated_storage   = 50
+  storage_type            = "gp3"
+  storage_encrypted       = true
+  db_name                 = var.db_name
+  username                = var.db_username
+  password                = var.db_password
+  port                    = 5432
+  db_subnet_group_name    = aws_db_subnet_group.main.name
+  vpc_security_group_ids  = [aws_security_group.rds.id]
+  parameter_group_name    = aws_db_parameter_group.main.name
+  publicly_accessible     = var.publicly_accessible
+  multi_az                = false
   backup_retention_period = 7
-  backup_window          = "03:00-04:00"
-  maintenance_window     = "Mon:04:30-Mon:05:30"
-  skip_final_snapshot    = true
-  deletion_protection    = false
-  apply_immediately      = true
+  backup_window           = "03:00-04:00"
+  maintenance_window      = "Mon:04:30-Mon:05:30"
+  skip_final_snapshot     = true
+  deletion_protection     = false
+  apply_immediately       = true
 
-  performance_insights_enabled = false
+  performance_insights_enabled    = false
   enabled_cloudwatch_logs_exports = ["postgresql"]
 }
 
-# Stores conn string no Secrets Manager pra Lambda e App consumirem
 resource "aws_secretsmanager_secret" "db_url" {
-  name = "${var.db_identifier}/connection-url"
-  description = "Connection URL do RDS PostgreSQL da oficina mecanica"
+  name                    = "${var.db_identifier}/connection-url"
   recovery_window_in_days = 0
 }
 

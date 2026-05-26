@@ -5,49 +5,49 @@ variable "aws_region" {
 }
 
 variable "environment" {
-  description = "Environment (prod, homolog)"
+  description = "Environment name"
   type        = string
   default     = "prod"
 }
 
 variable "db_identifier" {
-  description = "Identifier da instância RDS"
+  description = "RDS instance identifier"
   type        = string
   default     = "oficina-mecanica-db"
 }
 
 variable "db_name" {
-  description = "Nome do banco inicial"
+  description = "Initial database name"
   type        = string
   default     = "oficina"
 }
 
 variable "db_username" {
-  description = "Usuário admin do RDS"
+  description = "RDS admin username"
   type        = string
   default     = "oficina_admin"
 }
 
 variable "db_password" {
-  description = "Senha do RDS — passe via TF_VAR_db_password ou GitHub Secret"
+  description = "RDS admin password"
   type        = string
   sensitive   = true
 }
 
 variable "instance_class" {
-  description = "Classe da instância RDS"
+  description = "RDS instance class"
   type        = string
   default     = "db.t3.micro"
 }
 
 variable "publicly_accessible" {
-  description = "Se RDS é acessível pela internet (true facilita pra testar Lambda + dev local)"
+  description = "Whether RDS is reachable from the internet"
   type        = bool
   default     = true
 }
 
 variable "allowed_cidrs" {
-  description = "CIDRs adicionais permitidos a conectar (default: aberto pra teste acadêmico)"
+  description = "Extra CIDRs allowed to connect"
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }
