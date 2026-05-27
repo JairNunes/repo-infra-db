@@ -1,6 +1,6 @@
 # repo-infra-db
 
-Terraform do RDS PostgreSQL da API de Oficina Mecânica (Fase 3, FIAP 13SOAT — Grupo 72).
+Terraform do RDS PostgreSQL da API de Oficina Mecânica (Fase 3, FIAP 13SOAT — Grupo 75).
 
 Banco gerenciado consumido pela app NestJS (`repo-app`) e pela Lambda de autenticação (`repo-lambda-auth`).
 
