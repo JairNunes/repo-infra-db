@@ -4,6 +4,12 @@ Terraform do RDS PostgreSQL da API de Oficina Mecânica (Fase 3, FIAP 13SOAT —
 
 Banco gerenciado consumido pela app NestJS (`repo-app`) e pela Lambda de autenticação (`repo-lambda-auth`).
 
+## Arquitetura
+
+![Componentes](https://raw.githubusercontent.com/JairNunes/repo-app/main/diagrams/01-componentes.png)
+
+Esse repo provisiona o bloco `AWS RDS PostgreSQL 16` (canto inferior central). O endpoint e a connection URL são consumidos pela Lambda Auth (via `pg`) e pela app NestJS (via Prisma). Diagrama completo + fontes editáveis (drawio) em [`repo-app/diagrams/`](https://github.com/JairNunes/repo-app/tree/main/diagrams).
+
 ## Stack
 
 - AWS RDS PostgreSQL 16.3 (`db.t3.micro`, 20GB gp3)
